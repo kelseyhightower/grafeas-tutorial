@@ -1,0 +1,12 @@
+{
+  "name": "projects/image-signing/occurrences/echo@sha256:5dbeeb57bd86e1852ef3149431201ec2491978747299f1d1b69fb464bfc992c0",
+  "resourceUrl": "https://gcr.io/hightowerlabs/echo@sha256:5dbeeb57bd86e1852ef3149431201ec2491978747299f1d1b69fb464bfc992c0",
+  "noteName": "projects/image-signing/notes/production",
+  "attestation": {
+    "pgpSignedAttestation": {
+       "signature": "dsfsadf",
+       "contentType": "application/vnd.gcr.image.summary.v1+json",
+       "pgpKeyId": "A663AEEA"  
+    }
+  }
+}

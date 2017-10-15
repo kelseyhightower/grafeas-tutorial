@@ -1,0 +1,10 @@
+{
+  "name": "projects/image-signing/notes/production",
+  "shortDescription": "The production image signer.",
+  "longDescription": "The production image signer.",
+  "attestationAuthority": {
+    "hint": {
+      "humanReadableName": "production"
+    }
+  }
+}
