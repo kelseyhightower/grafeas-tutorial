@@ -1,0 +1,16 @@
+{
+  "CN": "image-signature-webhook.default.svc",
+  "key": {
+    "algo": "rsa",
+    "size": 2048
+  },
+  "names": [
+    {
+      "C": "US",
+      "L": "Portland",
+      "O": "Grafeas",
+      "OU": "Image Signature Webhook",
+      "ST": "Oregon"
+    }
+  ]
+}

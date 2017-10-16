@@ -1,0 +1,43 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: image-signature-webhook
+  name: image-signature-webhook
+spec:
+  ports:
+    - name: https
+      port: 443
+      protocol: "TCP"
+  selector:
+    app: image-signature-webhook
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: image-signature-webhook
+spec:
+  template:
+    metadata:
+      labels:
+        app: image-signature-webhook
+    spec:
+      containers:
+        - name: image-signature-webhook
+          image: "gcr.io/hightowerlabs/image-signature-webhook:0.0.2"
+          imagePullPolicy: Always
+          args:
+            - "-tls-cert=/etc/admission-controller/tls/tls.crt"
+            - "-tls-key=/etc/admission-controller/tls/tls.key"
+          volumeMounts:
+            - name: tls
+              mountPath: /etc/admission-controller/tls
+            - name: keyrings
+              mountPath: /etc/admission-controller/keyrings
+      volumes:
+        - name: tls
+          secret:
+            secretName: tls-image-signature-webhook
+        - name: keyrings
+          configMap:
+            name: image-signature-webhook-keyrings

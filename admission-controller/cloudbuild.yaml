@@ -1,0 +1,6 @@
+steps:
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["build", "-t", "gcr.io/${PROJECT_ID}/image-signature-webhook:0.0.3", "."]
+    id: "docker-build"
+
+images: ["gcr.io/${PROJECT_ID}/image-signature-webhook:0.0.3"]

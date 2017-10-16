@@ -2,6 +2,12 @@
 
 
 [[projects]]
+  branch = "master"
+  name = "github.com/Grafeas/client-go"
+  packages = ["v1alpha1"]
+  revision = "bda92cc986813acad14694c8946dd4455a5d3c6d"
+
+[[projects]]
   name = "github.com/PuerkitoBio/purell"
   packages = ["."]
   revision = "0bcb03f4b4d0a9428594752bd2a3b9aa0a9d4bd4"
@@ -44,6 +50,12 @@
   revision = "f3f9494671f93fcff853e3c6e9e948b3eb71e590"
 
 [[projects]]
+  name = "github.com/go-resty/resty"
+  packages = ["."]
+  revision = "9ac9c42358f7c3c69ac9f8610e8790d7c338e85d"
+  version = "v1.0"
+
+[[projects]]
   name = "github.com/gogo/protobuf"
   packages = ["proto","sortkeys"]
   revision = "342cbe0a04158f6dcb03ca0079991a51a4248c02"
@@ -76,7 +88,7 @@
 [[projects]]
   branch = "master"
   name = "golang.org/x/net"
-  packages = ["http2","http2/hpack","idna","lex/httplex"]
+  packages = ["http2","http2/hpack","idna","lex/httplex","publicsuffix"]
   revision = "a04bdaca5b32abe1c069418fb7088ae607de5bd0"
 
 [[projects]]
@@ -118,6 +130,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "c4966e075fbc0dae3aada2a006e45b735599dd8fdfbe35d775212fe1bfe8f77e"
+  inputs-digest = "d5ffdbd24323347e936f51a3f96f07772c3194e83ebfbcfa75b92359be6577ee"
   solver-name = "gps-cdcl"
   solver-version = 1

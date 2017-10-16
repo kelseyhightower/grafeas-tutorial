@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: grafeas
+  name: grafeas
+spec:
+  ports:
+    - name: http
+      port: 8080
+      protocol: "TCP"
+  selector:
+    app: grafeas
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: grafeas
+spec:
+  template:
+    metadata:
+      labels:
+        app: grafeas
+    spec:
+      containers:
+        - name: grafeas
+          image: "gcr.io/hightowerlabs/grafeas:0.0.1"
+          imagePullPolicy: Always
