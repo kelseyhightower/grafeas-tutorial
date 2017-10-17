@@ -12,6 +12,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 
 	"golang.org/x/crypto/openpgp"
 	"golang.org/x/crypto/openpgp/armor"
@@ -22,6 +23,7 @@ import (
 
 	"k8s.io/api/admission/v1alpha1"
 	"k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 var (
@@ -73,7 +75,7 @@ func admissionReviewHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	admissionReviewStatus := v1alpha1.AdmissionReviewStatus{Allowed: true}
+	admissionReviewStatus := v1alpha1.AdmissionReviewStatus{Allowed: false}
 	for _, container := range pod.Spec.Containers {
 		u := fmt.Sprintf("%s/%s", grafeasUrl, occurrencesPath)
 		resp, err := http.Get(u)
@@ -102,13 +104,22 @@ func admissionReviewHandler(w http.ResponseWriter, r *http.Request) {
 			continue
 		}
 
+		match := false
 		for _, occurrence := range occurrencesResponse.Occurrences {
+			resourceUrl := occurrence.ResourceUrl
 			signature := occurrence.Attestation.PgpSignedAttestation.Signature
 			keyId := occurrence.Attestation.PgpSignedAttestation.PgpKeyId
 
-			log.Println(container.Image)
-			log.Println(signature)
-			log.Println(keyId)
+			log.Printf("Container Image: %s", container.Image)
+			log.Printf("ResourceUrl: %s", resourceUrl)
+			log.Printf("Signature: %s", signature)
+			log.Printf("KeyId: %s", keyId)
+
+			if container.Image != strings.TrimPrefix(resourceUrl, "https://") {
+				continue
+			}
+
+			match = true
 
 			s, err := base64.StdEncoding.DecodeString(signature)
 			if err != nil {
@@ -170,13 +181,23 @@ func admissionReviewHandler(w http.ResponseWriter, r *http.Request) {
 			err = key.VerifySignature(hash, sig)
 			if err != nil {
 				log.Println(err)
-				continue
+				log.Printf("Signature verification failed for container image: %s", container.Image)
+				admissionReviewStatus.Allowed = false
+				goto done
 			}
 
-			log.Println(string(b.Plaintext))
+			log.Printf("Signature verified for container image: %s", container.Image)
+			admissionReviewStatus.Allowed = true
+		}
+
+		if !match {
+			log.Printf("No matched signatures for container image: %s", container.Image)
+			admissionReviewStatus.Allowed = false
+			goto done
 		}
 	}
 
+done:
 	ar = v1alpha1.AdmissionReview{
 		Status: admissionReviewStatus,
 	}
