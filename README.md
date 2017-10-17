@@ -15,7 +15,7 @@ brew install gpg2
 ```
 
 ```
-gpg --quick-generate-key image.signer@example.com
+gpg --quick-generate-key --yes image.signer@example.com 
 ```
 
 ```
@@ -23,38 +23,25 @@ gpg --list-keys --keyid-format short
 ```
 
 ```
-gcloud container images describe gcr.io/hightowerlabs/echo \
-  --format json > image-summary.json
+gpg --armor --export image.signer@example.com > key.pub
 ```
 
 ```
 gpg -u image.signer@example.com \
-  --sign \
   --armor \
+  --clearsign \
   --output=signature.gpg \
-  image-summary.json
+  image.txt
 ```
 
 ```
-gpg --export image.signer@example.com > keyring.pub
+gpg --output - --verify signature.gpg
 ```
-
-```
-gpg --no-default-keyring \
-  --keyring ./keyring.pub \
-  --output test.json \
-  --verify signature.gpg
-```
-
 
 ```
 curl -X POST \
   "http://127.0.0.1:8080/v1alpha1/projects/image-signing/notes?noteId=production" \
   -d @note.json
-```
-
-```
-curl -s http://127.0.0.1:8080/v1alpha1/projects/image-signing/notes/production | jq
 ```
 
 ```
@@ -64,16 +51,6 @@ curl -X POST \
 ```
 
 ```
-curl -s 'http://127.0.0.1:8080/v1alpha1/projects/image-signing/occurrences' | jq
-```
-
-```
-IMAGE_SIGNATURE=$(curl -s http://127.0.0.1:8080/v1alpha1/projects/image-signing/notes/jira | \
-  jq -r '.buildType.signature.signature' | \
-  base64 -D -)
-```
-
-```
-KEY_ID=$(curl -s http://127.0.0.1:8080/v1alpha1/projects/image-signing/notes/jira | \
-  jq -r '.buildType.signature.keyId')
+kubectl create configmap image-signature-webhook \
+  --from-file D2D2E339.pub=key.pub
 ```

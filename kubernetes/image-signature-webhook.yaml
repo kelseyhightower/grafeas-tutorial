@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
         - name: image-signature-webhook
-          image: "gcr.io/hightowerlabs/image-signature-webhook:0.0.2"
+          image: "gcr.io/hightowerlabs/image-signature-webhook:0.0.3"
           imagePullPolicy: Always
           args:
             - "-tls-cert=/etc/admission-controller/tls/tls.crt"
@@ -32,12 +32,12 @@ spec:
           volumeMounts:
             - name: tls
               mountPath: /etc/admission-controller/tls
-            - name: keyrings
-              mountPath: /etc/admission-controller/keyrings
+            - name: pubkeys
+              mountPath: /etc/admission-controller/pubkeys
       volumes:
         - name: tls
           secret:
             secretName: tls-image-signature-webhook
-        - name: keyrings
+        - name: pubkeys
           configMap:
-            name: image-signature-webhook-keyrings
+            name: image-signature-webhook

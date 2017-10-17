@@ -1,8 +1,0 @@
-{
-  "image_summary": {
-    "digest": "sha256:5dbeeb57bd86e1852ef3149431201ec2491978747299f1d1b69fb464bfc992c0",
-    "fully_qualified_digest": "gcr.io/hightowerlabs/echo@sha256:5dbeeb57bd86e1852ef3149431201ec2491978747299f1d1b69fb464bfc992c0",
-    "registry": "gcr.io",
-    "repository": "hightowerlabs/echo"
-  }
-}
