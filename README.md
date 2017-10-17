@@ -1,6 +1,6 @@
 # Grafeas Tutorial
 
-This tutorial will guide you through testing Grafeas.
+This tutorial will guide you through testing Grafeas.  In it, you will create a Kubernetes cluster configured to only allow container images signed by a specific key, configurable via a configmap.  Container image signatures will be stored in Grafeas.  To make sure only signed images are allowed, you will start an admission plugin service which finds signatures in Grafeas and verifies them.
 
 ## Tutorial
 
