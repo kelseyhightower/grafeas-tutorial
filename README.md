@@ -211,17 +211,47 @@ kubectl apply -f kubernetes/admission-hook-configuration.yaml
 
 ### Testing the Admission Webhook
 
+Attempt to run the `nginx:1.13` container image which does not have an pgpSignedAttestation occurrence in the Grafeas API. Create the `nginx` pod:
+
 ```
 kubectl apply -f pods/nginx.yaml
 ```
 
+Notice the `nginx` pod was not created and the follow error was returned: 
+
 ```
-Error from server: error when creating "pods/nginx.yaml": admission webhook "image-signature.hightowerlabs.com" denied the request without explanation
+The  "" is invalid: : No matched signatures for container image: nginx:1.13
 ```
+
+Attempt to run the `gcr.io/hightowerlabs/echod@sha256:aba48d60ba4410ec921f9d2e8169236c57660d121f9430dc9758d754eec8f887` container image which has an pgpSignedAttestation occurrence in the Grafeas API.
 
 ```
 kubectl apply -f pods/echod.yaml 
 ```
 ```
 pod "echod" created
+```
+
+At this point the following pods should be running in your cluster:
+
+```
+kubectl get pods
+```
+```
+NAME                                       READY     STATUS    RESTARTS   AGE
+echod                                      1/1       Running   0          5m
+grafeas-5b5759cbcf-lx8r5                   1/1       Running   0          12m
+image-signature-webhook-6cc7d6bd74-55blt   1/1       Running   0          8m
+```
+
+> Notice the `nginx` pod was not created because the `nginx:1.13` container image was not verified by the image signature webhook.
+
+## Cleanup
+
+```
+kubectl delete deployments grafeas image-signature-webhook
+kubectl delete pods echod
+kubectl delete svc grafeas image-signature-webhook
+kubectl delete secrets tls-image-signature-webhook
+kubectl delete configmap image-signature-webhook
 ```

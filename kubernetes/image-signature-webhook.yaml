@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
         - name: image-signature-webhook
-          image: "gcr.io/hightowerlabs/image-signature-webhook:0.0.3"
+          image: "gcr.io/hightowerlabs/image-signature-webhook:0.1.0"
           imagePullPolicy: Always
           args:
             - "-tls-cert=/etc/admission-controller/tls/tls.crt"
