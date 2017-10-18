@@ -28,36 +28,62 @@ kubectl apply -f kubernetes/grafeas.yaml
 
 > While in early alpha the Grafeas server leverages an in-memory data store. If the Grafeas server is ever restarted all image signature must be repopulated.
 
-### Create Image Signature 
+### Generating GPG Signing Keys
 
-Install gpg:
+In this section you will generate a [gpg keypair](https://www.gnupg.org/gph/en/manual.html#INTRO) suitable for signing container image metadata.
+
+Install gpg for you platform:
+
+#### OS X
 
 ```
 brew install gpg2
 ```
 
-Generate a signing key:
+#### Linux
+
+```
+apt-get install gnupg
+```
+
+Once gpg has been installed generate a signing key:
 
 ```
 gpg --quick-generate-key --yes image.signer@example.com 
 ```
 
-List the keys and store the key ID:
+Retrive the ID of the signing key:
 
 ```
 gpg --list-keys --keyid-format short
 ```
 
-Store the gpg key ID in the `GPG_KEY_ID` env var:
+```
+------------------------------------
+pub   rsa2048/0CD9D96F 2017-10-17 [SC] [expires: 2019-10-17]
+      510CE141B559A243439EB18926CE52D30CD9D96F
+uid         [ultimate] image.signer@example.com
+sub   rsa2048/2C216B83 2017-10-17 [E]
+```
+
+> Based on the above output the key ID is 0CD9D96F. Your key ID will be different.
+
+Store the ID of your signing key in the `GPG_KEY_ID` env var:
 
 ```
 GPG_KEY_ID="0CD9D96F"
 ```
+#### Signing Container Image Metadata
 
-Export the image signer's public key:
+Container images tend to range in size from a few megabytes to multiple gigabytes. Signing and distributing container images can be quite resource intensive so we are going to opt for signing the [image digest](https://cloud.google.com/container-registry/docs/concepts/image-formats#content_addressability) which uniquely identifies a container image.
+
+In this tutorial the `gcr.io/hightowerlabs/echod` container image will be used for testing. Instead of trusting an image tag such `0.0.1`, which can be reused and point to a different container image later, we are going to trust the image digest. 
 
 ```
-gpg --armor --export image.signer@example.com > ${GPG_KEY_ID}.pub
+cat image-digest.txt
+```
+```
+sha256:aba48d60ba4410ec921f9d2e8169236c57660d121f9430dc9758d754eec8f887
 ```
 
 Sign the image digest text file:
@@ -69,6 +95,13 @@ gpg -u image.signer@example.com \
   --output=signature.gpg \
   image-digest.txt
 ```
+
+In order to verify signed images others must trust and have access to the image signer's public key. Export the image signer's public key:
+
+```
+gpg --armor --export image.signer@example.com > ${GPG_KEY_ID}.pub
+```
+
 
 Verify the signature:
 
