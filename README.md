@@ -252,7 +252,7 @@ image-signature-webhook-6cc7d6bd74-55blt   1/1       Running   0          8m
 
 ## Cleanup
 
-Run the following command to remove the Kubernetes resources created during this tutorial:
+Run the following commands to remove the Kubernetes resources created during this tutorial:
 
 ```
 kubectl delete deployments grafeas image-signature-webhook
