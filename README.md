@@ -16,11 +16,17 @@ gcloud alpha container clusters create grafeas \
   --cluster-version 1.8.0-gke.1
 ```
 
-Create the Grafeas deployment:
+### Deploy the Grafeas Server
+
+[Grafeas](http://grafeas.io/about) is an open artifact metadata API to audit and govern your software supply chain. In this tutorial Grafeas will be used to store container image signatures. 
+
+Create the Grafeas server deployment:
 
 ```
 kubectl apply -f kubernetes/grafeas.yaml
 ```
+
+> While in early alpha the Grafeas server leverages an in-memory data store. If the Grafeas server is ever restarted, all image signature must be repopulated.
 
 ### Create Image Signature 
 
