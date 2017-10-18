@@ -96,13 +96,6 @@ gpg -u image.signer@example.com \
   image-digest.txt
 ```
 
-In order to verify signed images others must trust and have access to the image signer's public key. Export the image signer's public key:
-
-```
-gpg --armor --export image.signer@example.com > ${GPG_KEY_ID}.pub
-```
-
-
 Verify the signature:
 
 ```
@@ -115,6 +108,12 @@ gpg: Signature made Tue Oct 17 09:11:53 2017 PDT
 gpg:                using RSA key 510CE141B559A243439EB18926CE52D30CD9D96F
 gpg:                issuer "image.signer@example.com"
 gpg: Good signature from "image.signer@example.com" [ultimate]
+```
+
+In order for others to verify signed images they must trust and have access to the image signer's public key. Export the image signer's public key:
+
+```
+gpg --armor --export image.signer@example.com > ${GPG_KEY_ID}.pub
 ```
 
 ### Create a pgpSignedAttestation Occurrence
