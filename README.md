@@ -26,7 +26,7 @@ Create the Grafeas server deployment:
 kubectl apply -f kubernetes/grafeas.yaml
 ```
 
-> While in early alpha the Grafeas server leverages an in-memory data store. If the Grafeas server is ever restarted, all image signature must be repopulated.
+> While in early alpha the Grafeas server leverages an in-memory data store. If the Grafeas server is ever restarted all image signature must be repopulated.
 
 ### Create Image Signature 
 
