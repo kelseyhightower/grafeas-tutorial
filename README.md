@@ -203,11 +203,13 @@ Create the `image-signature-webhook` deployment:
 kubectl apply -f kubernetes/image-signature-webhook.yaml 
 ```
 
-Create the `image-signature-webook` ExternalAdmissionHookConfiguration:
+Create the `image-signature-webook` [ExternalAdmissionHookConfiguration](https://kubernetes.io/docs/admin/extensible-admission-controllers/#how-are-external-admission-webhooks-triggered):
 
 ```
 kubectl apply -f kubernetes/admission-hook-configuration.yaml
 ```
+
+> After you create the external admission hook configuration, the system will take a few seconds to honor the new configuration.
 
 ### Testing the Admission Webhook
 
@@ -247,6 +249,8 @@ image-signature-webhook-6cc7d6bd74-55blt   1/1       Running   0          8m
 > Notice the `nginx` pod was not created because the `nginx:1.13` container image was not verified by the image signature webhook.
 
 ## Cleanup
+
+Run the following command to remove the Kubernetes resources created during this tutorial:
 
 ```
 kubectl delete deployments grafeas image-signature-webhook
