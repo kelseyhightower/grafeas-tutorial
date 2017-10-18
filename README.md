@@ -6,15 +6,17 @@ This tutorial will guide you through testing Grafeas.  In it, you will create a 
 
 ### Infrastructure
 
-A Kubernetes 1.8+ cluster is required with support for the [external admission webhooks](https://kubernetes.io/docs/admin/extensible-admission-controllers/#external-admission-webhooks) alpha feature enabled. The `image-signature-webhook` external admission webhook will be used to enforce only signed images are allowed to be deployed to the cluster.
+A Kubernetes 1.8+ cluster is required with support for the [external admission webhooks](https://kubernetes.io/docs/admin/extensible-admission-controllers/#external-admission-webhooks) alpha feature enabled.
 
-Create a 1.8 Kubernetes cluster:
+If you have access to [Google Container Engine](https://cloud.google.com/container-engine/) use the gcloud command to create a 1.8 Kubernetes cluster:
 
 ```
 gcloud alpha container clusters create grafeas \
   --enable-kubernetes-alpha \
   --cluster-version 1.8.0-gke.1
 ```
+
+> Any Kubernetes 1.8 cluster with support for external admission webhooks will work. 
 
 ### Deploy the Grafeas Server
 
