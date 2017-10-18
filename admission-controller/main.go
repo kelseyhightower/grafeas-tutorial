@@ -88,6 +88,9 @@ func admissionReviewHandler(w http.ResponseWriter, r *http.Request) {
 
 	admissionReviewStatus := v1alpha1.AdmissionReviewStatus{Allowed: false}
 	for _, container := range pod.Spec.Containers {
+		// Retrieve all occurrences.
+		// This call should be replaced by a filtered called based on
+		// the container image under review.
 		u := fmt.Sprintf("%s/%s", grafeasUrl, occurrencesPath)
 		resp, err := http.Get(u)
 		if err != nil {
@@ -115,6 +118,7 @@ func admissionReviewHandler(w http.ResponseWriter, r *http.Request) {
 			continue
 		}
 
+		// Find a valid signature for the given container image.
 		match := false
 		for _, occurrence := range occurrencesResponse.Occurrences {
 			resourceUrl := occurrence.ResourceUrl
@@ -192,8 +196,19 @@ func admissionReviewHandler(w http.ResponseWriter, r *http.Request) {
 			err = key.VerifySignature(hash, sig)
 			if err != nil {
 				log.Println(err)
-				log.Printf("Signature verification failed for container image: %s", container.Image)
+
+				message := fmt.Sprintf("Signature verification failed for container image: %s", container.Image)
+				log.Printf(message)
+
 				admissionReviewStatus.Allowed = false
+				admissionReviewStatus.Result = &metav1.Status{
+					Reason: metav1.StatusReasonInvalid,
+					Details: &metav1.StatusDetails{
+						Causes: []metav1.StatusCause{
+							{Message: message},
+						},
+					},
+				}
 				goto done
 			}
 
@@ -202,8 +217,17 @@ func admissionReviewHandler(w http.ResponseWriter, r *http.Request) {
 		}
 
 		if !match {
-			log.Printf("No matched signatures for container image: %s", container.Image)
+			message := fmt.Sprintf("No matched signatures for container image: %s", container.Image)
+			log.Printf(message)
 			admissionReviewStatus.Allowed = false
+			admissionReviewStatus.Result = &metav1.Status{
+				Reason: metav1.StatusReasonInvalid,
+				Details: &metav1.StatusDetails{
+					Causes: []metav1.StatusCause{
+						{Message: message},
+					},
+				},
+			}
 			goto done
 		}
 	}
