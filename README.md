@@ -109,6 +109,14 @@ Verify the signature:
 gpg --output - --verify signature.gpg
 ```
 
+```
+sha256:aba48d60ba4410ec921f9d2e8169236c57660d121f9430dc9758d754eec8f887
+gpg: Signature made Tue Oct 17 09:11:53 2017 PDT
+gpg:                using RSA key 510CE141B559A243439EB18926CE52D30CD9D96F
+gpg:                issuer "image.signer@example.com"
+gpg: Good signature from "image.signer@example.com" [ultimate]
+```
+
 ### Create a pgpSignedAttestation Occurrence
 
 In a new terminal create a secure tunnel to the grafeas server:
