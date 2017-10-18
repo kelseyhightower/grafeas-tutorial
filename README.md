@@ -118,6 +118,8 @@ gpg --armor --export image.signer@example.com > ${GPG_KEY_ID}.pub
 
 ### Create a pgpSignedAttestation Occurrence
 
+Now that we have a signed container image, and a public key to verify it, we need to create a [pgpSignedAttestation occurrence](https://github.com/Grafeas/Grafeas/blob/master/samples/server/go-server/api/docs/PgpSignedAttestation.md) using the Grafeas API.
+
 In a new terminal create a secure tunnel to the grafeas server:
 
 ```
@@ -167,6 +169,10 @@ curl -X POST \
   'http://127.0.0.1:8080/v1alpha1/projects/image-signing/occurrences' \
   -d @occurrence.json
 ```
+
+At this point the `gcr.io/hightowerlabs/echod` container image can be verified through the Grafeas API.
+
+> Only the `gcr.io/hightowerlabs/echod` container image identified by the `sha256:aba48d60ba4410ec921f9d2e8169236c57660d121f9430dc9758d754eec8f887` image digest and be verified by the Grafeas API. Additional images require a new occurrence. 
 
 ### Deploy the Image Signature Webhook
 
