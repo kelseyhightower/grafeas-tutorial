@@ -206,7 +206,7 @@ kubectl apply -f kubernetes/image-signature-webhook.yaml
 Create the `image-signature-webook` ExternalAdmissionHookConfiguration:
 
 ```
-kubectl apply -f kubernetes/admission-hook-configuration.yam
+kubectl apply -f kubernetes/admission-hook-configuration.yaml
 ```
 
 ### Testing the Admission Webhook
