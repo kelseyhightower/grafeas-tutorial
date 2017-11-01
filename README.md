@@ -15,7 +15,7 @@ If you have access to [Google Container Engine](https://cloud.google.com/contain
 ```
 gcloud alpha container clusters create grafeas \
   --enable-kubernetes-alpha \
-  --cluster-version 1.8.0-gke.1
+  --cluster-version 1.8.1-gke.0
 ```
 
 > Any Kubernetes 1.8 cluster with support for external admission webhooks will work. 
