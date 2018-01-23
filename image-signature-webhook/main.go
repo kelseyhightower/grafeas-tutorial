@@ -32,7 +32,7 @@ import (
 
 	grafeas "github.com/Grafeas/client-go/v1alpha1"
 
-	"k8s.io/api/admission/v1alpha1"
+	"k8s.io/api/admission/v1beta1"
 	"k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
@@ -72,7 +72,9 @@ func admissionReviewHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	ar := v1alpha1.AdmissionReview{}
+	log.Println(string(data))
+
+	ar := v1beta1.AdmissionReview{}
 	if err := json.Unmarshal(data, &ar); err != nil {
 		log.Println(err)
 		w.WriteHeader(http.StatusBadRequest)
@@ -80,13 +82,13 @@ func admissionReviewHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	pod := v1.Pod{}
-	if err := json.Unmarshal(ar.Spec.Object.Raw, &pod); err != nil {
+	if err := json.Unmarshal(ar.Request.Object.Raw, &pod); err != nil {
 		log.Println(err)
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	admissionReviewStatus := v1alpha1.AdmissionReviewStatus{Allowed: false}
+	admissionResponse := v1beta1.AdmissionResponse{Allowed: false}
 	for _, container := range pod.Spec.Containers {
 		// Retrieve all occurrences.
 		// This call should be replaced by a filtered called based on
@@ -200,8 +202,8 @@ func admissionReviewHandler(w http.ResponseWriter, r *http.Request) {
 				message := fmt.Sprintf("Signature verification failed for container image: %s", container.Image)
 				log.Printf(message)
 
-				admissionReviewStatus.Allowed = false
-				admissionReviewStatus.Result = &metav1.Status{
+				admissionResponse.Allowed = false
+				admissionResponse.Result = &metav1.Status{
 					Reason: metav1.StatusReasonInvalid,
 					Details: &metav1.StatusDetails{
 						Causes: []metav1.StatusCause{
@@ -213,14 +215,14 @@ func admissionReviewHandler(w http.ResponseWriter, r *http.Request) {
 			}
 
 			log.Printf("Signature verified for container image: %s", container.Image)
-			admissionReviewStatus.Allowed = true
+			admissionResponse.Allowed = true
 		}
 
 		if !match {
 			message := fmt.Sprintf("No matched signatures for container image: %s", container.Image)
 			log.Printf(message)
-			admissionReviewStatus.Allowed = false
-			admissionReviewStatus.Result = &metav1.Status{
+			admissionResponse.Allowed = false
+			admissionResponse.Result = &metav1.Status{
 				Reason: metav1.StatusReasonInvalid,
 				Details: &metav1.StatusDetails{
 					Causes: []metav1.StatusCause{
@@ -233,8 +235,8 @@ func admissionReviewHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 done:
-	ar = v1alpha1.AdmissionReview{
-		Status: admissionReviewStatus,
+	ar = v1beta1.AdmissionReview{
+		Response: &admissionResponse,
 	}
 
 	data, err = json.Marshal(ar)

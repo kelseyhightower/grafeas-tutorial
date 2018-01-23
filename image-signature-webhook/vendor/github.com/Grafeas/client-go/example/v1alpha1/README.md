@@ -6,4 +6,4 @@ To run this server against the Grafeas reference implementation run the followin
 go get github.com/Grafeas/Greafeas/samples/server/go-server/api/
 go get github.com/Grafeas/client-go
 go run grafeas/samples/server/go-server/api/server/main/main.go
-go run client-go/example/main.go
+go run client-go/example/v1alpha1/main.go

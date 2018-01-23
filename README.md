@@ -8,14 +8,14 @@ Check out the [Introducing Grafeas](https://cloudplatform.googleblog.com/2017/10
 
 ### Infrastructure
 
-A Kubernetes 1.8+ cluster is required with support for the [external admission webhooks](https://kubernetes.io/docs/admin/extensible-admission-controllers/#external-admission-webhooks) alpha feature enabled.
+A Kubernetes 1.9+ cluster is required with support for the [ValidatingAdmissionWebhook](https://kubernetes.io/docs/admin/admission-controllers/#validatingadmissionwebhook-alpha-in-18-beta-in-19) alpha feature enabled.
 
-If you have access to [Google Container Engine](https://cloud.google.com/container-engine/) use the gcloud command to create a 1.8 Kubernetes cluster:
+If you have access to [Google Kubernetes Engine](https://cloud.google.com/kubernetes-engine) use the gcloud command to create a 1.9.1 Kubernetes cluster:
 
 ```
 gcloud alpha container clusters create grafeas \
   --enable-kubernetes-alpha \
-  --cluster-version 1.8.1-gke.0
+  --cluster-version 1.9.1-gke.0
 ```
 
 > Any Kubernetes 1.8 cluster with support for external admission webhooks will work. 
@@ -205,13 +205,13 @@ Create the `image-signature-webhook` deployment:
 kubectl apply -f kubernetes/image-signature-webhook.yaml 
 ```
 
-Create the `image-signature-webook` [ExternalAdmissionHookConfiguration](https://kubernetes.io/docs/admin/extensible-admission-controllers/#how-are-external-admission-webhooks-triggered):
+Create the `image-signature-webook` ValidatingWebhookConfiguration:
 
 ```
-kubectl apply -f kubernetes/admission-hook-configuration.yaml
+kubectl apply -f kubernetes/validating-webhook-configuration.yaml
 ```
 
-> After you create the external admission hook configuration, the system will take a few seconds to honor the new configuration.
+> After you create the validating webhook configuration, the system will take a few seconds to honor the new configuration.
 
 ### Testing the Admission Webhook
 
