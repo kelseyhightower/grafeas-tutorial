@@ -18,7 +18,7 @@ gcloud alpha container clusters create grafeas \
   --cluster-version 1.9.1-gke.0
 ```
 
-> Any Kubernetes 1.8 cluster with support for external admission webhooks will work. 
+> Any Kubernetes 1.9 cluster with support for validating admission webhooks will work. 
 
 ### Deploy the Grafeas Server
 
