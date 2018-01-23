@@ -6,6 +6,20 @@ Check out the [Introducing Grafeas](https://cloudplatform.googleblog.com/2017/10
 
 ## Tutorial
 
+### Prerequisites
+
+Clone this repository:
+
+```
+git clone https://github.com/kelseyhightower/grafeas-tutorial.git
+```
+
+```
+cd grafeas-tutorial
+```
+
+The remainder of this tutorial assumes you are in the `grafeas-tutorial` directory.
+
 ### Infrastructure
 
 A Kubernetes 1.9+ cluster is required with support for the [ValidatingAdmissionWebhook](https://kubernetes.io/docs/admin/admission-controllers/#validatingadmissionwebhook-alpha-in-18-beta-in-19) alpha feature enabled.
