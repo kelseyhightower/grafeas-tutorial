@@ -61,7 +61,7 @@ brew install gpg2
 #### Linux
 
 ```
-apt-get install gnupg
+apt-get install gnupg2
 ```
 
 Once gpg has been installed generate a signing key:
